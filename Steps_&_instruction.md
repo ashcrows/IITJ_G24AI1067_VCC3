@@ -41,7 +41,7 @@ We will use VirtualBox to create a local Fedora VM.
 - After installation, reboot and log in.
 
 ### 1.3 Install Essential Packages
-Run the following commands:
+- Run the following commands:
 
 ```sh
 sudo dnf update -y
@@ -56,7 +56,7 @@ sudo systemctl enable --now sshd
 We will use Prometheus to collect metrics and Grafana for visualization.
 
 ### 2.1 Install Prometheus
-Run:
+- Run:
 
 ```sh
 wget https://github.com/prometheus/prometheus/releases/download/v3.2.1/prometheus-3.2.1.linux-386.tar.gz
@@ -67,7 +67,7 @@ sudo mv promtool /usr/local/bin/
 ```
 
 ### 2.2 Configure Prometheus
-Create a Prometheus configuration file:
+- Create a Prometheus configuration file:
 
 ```sh
 sudo mkdir /etc/prometheus
@@ -77,7 +77,7 @@ sudo nano /etc/prometheus/prometheus.yml
 (Add the YAML configuration and save the file.)
 
 ### 2.3 Create a Prometheus Service
-Run:
+- Run:
 
 ```sh
 sudo nano /etc/systemd/system/prometheus.service
@@ -99,7 +99,7 @@ sudo systemctl enable prometheus
 Node Exporter helps collect system metrics.
 
 ### 3.1 Install Node Exporter
-Run:
+- Run:
 
 ```sh
 wget https://github.com/prometheus/node_exporter/releases/download/v1.9.0/node_exporter-1.9.0.linux-386.tar.gz
@@ -109,7 +109,7 @@ sudo mv node_exporter /usr/local/bin/
 ```
 
 ### 3.2 Create a Node Exporter Service
-Run:
+- Run:
 
 ```sh
 sudo nano /etc/systemd/system/node_exporter.service
@@ -117,7 +117,7 @@ sudo nano /etc/systemd/system/node_exporter.service
 
 (Add the service configuration and save the file.)
 
-Start Node Exporter:
+- Start Node Exporter:
 
 ```sh
 sudo systemctl daemon-reload
@@ -129,7 +129,7 @@ sudo systemctl enable node_exporter
 
 ## Step 4: Install and Configure Grafana
 ### 4.1 Install Grafana
-Run:
+- Run:
 
 ```sh
 sudo dnf install -y grafana
@@ -137,7 +137,7 @@ sudo systemctl start grafana-server
 sudo systemctl enable grafana-server
 ```
 
-Access Grafana at [http://localhost:3000](http://localhost:3000) (Default login: **admin/admin**).
+- Access Grafana at [http://localhost:3000](http://localhost:3000) (Default login: **admin/admin**).
 
 ### 4.2 Add Prometheus as a Data Source
 - Go to **Grafana → Configuration → Data Sources**.
@@ -152,31 +152,31 @@ Access Grafana at [http://localhost:3000](http://localhost:3000) (Default login:
 - Click **Add a New Panel**.
 
 ### 5.1 CPU Usage Panel
-Add Query:
+- Add Query:
 
 ```promql
 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
 ```
 
-Set Visualization to **Gauge** or **Graph**.
+- Set Visualization to **Gauge** or **Graph**.
 
 ### 5.2 Memory Usage Panel
-Add Query:
+- Add Query:
 
 ```promql
 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))
 ```
 
-Set Visualization to **Gauge** or **Graph**.
+- Set Visualization to **Gauge** or **Graph**.
 
 ### 5.3 Disk Usage Panel
-Add Query:
+- Add Query:
 
 ```promql
 100 - ((node_filesystem_avail_bytes{mountpoint="/"} * 100) / node_filesystem_size_bytes{mountpoint="/"})
 ```
 
-Set Visualization to **Bar Chart**. Click **Apply and Save** the Dashboard.
+- Set Visualization to **Bar Chart**. Click **Apply and Save** the Dashboard.
 
 ---
 
