@@ -12,6 +12,6 @@ For steps and instruction with sample process follow file [Steps_&_instruction.m
 - There are two migration scripts to check the CPU usage of local:
   - Run with Prometheus services
   - Run on custom python library script
-- There are two application which is executed follwoing with the running and then deploying to cloud VMs from local VMs as per policy:
-  - A simple script of python to show the current hostname and ip addess of the host
-  - A Live webpage which will update every 30 seconds and fetch the top 10 powerful cunrrency presnet in real time.
+- There are two application which is executed following with the running and then deploying to cloud VMs from local VMs as per policy:
+  - A simple script of python to show the current hostname and ip address of the host
+  - A Live webpage which will update every 30 seconds and fetch the top 10 powerful currency presnet in real time.
