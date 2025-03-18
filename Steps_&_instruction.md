@@ -95,7 +95,12 @@ sudo systemctl daemon-reload
 sudo systemctl start prometheus
 sudo systemctl enable prometheus
 ```
-
+- Note: If Prometheus is not loading when trying to check http://localhost:9090, use below steps(in OS Linux):
+  ```sh
+  sestatus
+  sudo setenforce 0
+  sudo systemctl restart prometheus
+  ``` 
 ---
 
 ## Step 3: Install and Configure Node Exporter
