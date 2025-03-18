@@ -63,7 +63,7 @@ Run:
 
 ```sh
 wget https://github.com/prometheus/prometheus/releases/download/v3.2.1/prometheus-3.2.1.linux-386.tar.gz
-tar -xvf prometheus-2.45.0.linux-amd64.tar.gz
+tar -xvf prometheus-3.2.1.linux-386.tar.gz
 cd prometheus-2.45.0.linux-amd64
 sudo mv prometheus /usr/local/bin/
 sudo mv promtool /usr/local/bin/
@@ -106,7 +106,7 @@ Run:
 
 ```sh
 wget https://github.com/prometheus/node_exporter/releases/download/v1.9.0/node_exporter-1.9.0.linux-386.tar.gz
-tar -xvf node_exporter-1.6.1.linux-amd64.tar.gz
+tar -xvf node_exporter-1.9.0.linux-386.tar.gz
 cd node_exporter-1.6.1.linux-amd64
 sudo mv node_exporter /usr/local/bin/
 ```
