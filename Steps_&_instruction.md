@@ -234,7 +234,7 @@ gcloud compute instances create gcp-vm \
 
 ---
 
-## Step7 : Deploy a Sample Application
+## Step 7 : Deploy a Sample Application
 Application to show the hostname and it's ip, wherever the script will be running
 ### 7.1 Install Flask
 ```sh
@@ -267,7 +267,7 @@ nohup python3 ~/app/app.py > ~/app/app.log 2>&1 &
 
 ---
 
-## Step8 : Automate Resource Migration
+## Step 8 : Automate Resource Migration
 We may automate with below:
 - custom python code snippet which will use the python subprocess and os libraries to get CPU usage
 - a python script which will use the prometheus to check the CPU usage by getting the mertics
