@@ -41,7 +41,7 @@ We will use VirtualBox to create a local Fedora VM.
 - After installation, reboot and log in.
 
 ### 1.3 Install Essential Packages
-- Run the following commands:
+Run the following commands:
 
 ```sh
 sudo dnf update -y
@@ -56,7 +56,7 @@ sudo systemctl enable --now sshd
 We will use Prometheus to collect metrics and Grafana for visualization.
 
 ### 2.1 Install Prometheus
-- Run:
+Run:
 
 ```sh
 wget https://github.com/prometheus/prometheus/releases/download/v3.2.1/prometheus-3.2.1.linux-386.tar.gz
@@ -67,7 +67,7 @@ sudo mv promtool /usr/local/bin/
 ```
 
 ### 2.2 Configure Prometheus
-- Create a Prometheus configuration file:
+Create a Prometheus configuration file:
 
 ```sh
 sudo mkdir /etc/prometheus
@@ -77,7 +77,7 @@ sudo nano /etc/prometheus/prometheus.yml
 (Add the YAML configuration and save the file.)
 
 ### 2.3 Create a Prometheus Service
-- Run:
+Run:
 
 ```sh
 sudo nano /etc/systemd/system/prometheus.service
@@ -99,7 +99,7 @@ sudo systemctl enable prometheus
 Node Exporter helps collect system metrics.
 
 ### 3.1 Install Node Exporter
-- Run:
+Run:
 
 ```sh
 wget https://github.com/prometheus/node_exporter/releases/download/v1.9.0/node_exporter-1.9.0.linux-386.tar.gz
@@ -109,7 +109,7 @@ sudo mv node_exporter /usr/local/bin/
 ```
 
 ### 3.2 Create a Node Exporter Service
-- Run:
+Run:
 
 ```sh
 sudo nano /etc/systemd/system/node_exporter.service
@@ -117,7 +117,7 @@ sudo nano /etc/systemd/system/node_exporter.service
 
 (Add the service configuration and save the file.)
 
-- Start Node Exporter:
+Start Node Exporter:
 
 ```sh
 sudo systemctl daemon-reload
@@ -129,7 +129,7 @@ sudo systemctl enable node_exporter
 
 ## Step 4: Install and Configure Grafana
 ### 4.1 Install Grafana
-- Run:
+Run:
 
 ```sh
 sudo dnf install -y grafana
@@ -137,7 +137,7 @@ sudo systemctl start grafana-server
 sudo systemctl enable grafana-server
 ```
 
-- Access Grafana at [http://localhost:3000](http://localhost:3000) (Default login: **admin/admin**).
+Access Grafana at [http://localhost:3000](http://localhost:3000) (Default login: **admin/admin**).
 
 ### 4.2 Add Prometheus as a Data Source
 - Go to **Grafana → Configuration → Data Sources**.
@@ -152,31 +152,148 @@ sudo systemctl enable grafana-server
 - Click **Add a New Panel**.
 
 ### 5.1 CPU Usage Panel
-- Add Query:
+Add Query:
 
 ```promql
 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
 ```
 
-- Set Visualization to **Gauge** or **Graph**.
+Set Visualization to **Gauge** or **Graph**.
 
 ### 5.2 Memory Usage Panel
-- Add Query:
+Add Query:
 
 ```promql
 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))
 ```
 
-- Set Visualization to **Gauge** or **Graph**.
+Set Visualization to **Gauge** or **Graph**.
 
 ### 5.3 Disk Usage Panel
-- Add Query:
+Add Query:
 
 ```promql
 100 - ((node_filesystem_avail_bytes{mountpoint="/"} * 100) / node_filesystem_size_bytes{mountpoint="/"})
 ```
 
-- Set Visualization to **Bar Chart**. Click **Apply and Save** the Dashboard.
+Set Visualization to **Bar Chart**. Click **Apply and Save** the Dashboard.
+
+---
+
+## Step 6: Configure Auto-Scaling on GCP
+### 6.1 Set Up GCP Environment
+- Create the repository file:
+```sh
+sudo tee /etc/yum.repos.d/google-cloud-sdk.repo << EOL
+[google-cloud-sdk]
+name=Google Cloud SDK
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOL
+
+```
+-  Clean and refresh repositories:
+```sh
+sudo dnf clean all
+sudo dnf makecache
+```
+
+- Install Google Cloud SDK and verify version
+```sh
+sudo dnf install -y google-cloud-sdk
+gcloud --version
+```
+
+- Initialize Google Cloud SDK
+```sh
+gcloud init
+```
+
+### 6.2 Create a Compute Engine VM in GCP using sdk from local vm
+```sh
+gcloud compute instances create gcp-vm \
+  --machine-type=e2-medium \
+  --image-family=fedora-cloud \
+  --image-project=fedora-cloud \
+  --zone=us-central1-a
+```
+
+### 6.3 Configure Auto-Scaling
+- Login to GCP UI platform
+- Now, Create a instance Templates(Eg: web-template) which will be used in the Managed Instance Group
+- Now, Create a Managed Instance Group with Debian VMs (Eg: web-migration)
+- Provide the minimum (like 1) VM instnaces and maximum(like 10) VM instnaces
+- Provide the policy- CPU usgae more than 75%, should trigger the auto scaling
+- Configure Auto-Scaling on the Managed Instance Group and save the managed instance group and check the new instance in compute engine
+
+---
+
+## Step7: Deploy a Sample Application
+Application to show the hostname and it's ip, wherever the script will be running
+### 7.1 Install Flask
+```sh
+pip install flask
+```
+
+### 7.2 Create a Sample App using(like using python and flask)
+- create the directories
+```sh
+mkdir -p /home/user/app
+nano /home/user/app/app.py
+```
+- Code snippet attached with file
+
+### 7.3 Make the script executable 
+```sh
+chmod +x ~/app/app.py
+```
+
+### 7.4 Execute the application
+```sh
+python3 ~/app/app.py
+```
+
+### 7.5 Additionally if the application needs to be kept it running in the background
+```sh
+nohup python3 ~/app/app.py > ~/app/app.log 2>&1 &
+```
+- Check the ip address and hostname of the local VM
+
+---
+
+## Step8: Automate Resource Migration
+We may automate with below:
+- custom python code snippet which will use the python subprocess and os libraries to get CPU usage
+- a python script which will use the prometheus to check the CPU usage by getting the mertics
+
+## 8.1 Create Migration Script
+- create the directories
+```sh 
+mkdir -p /home/user/migration
+nano /home/user/migration/migration_script.py
+```
+
+- Use the code snippet the as per the choice and application
+
+### 8.2 Make the script executable
+```sh
+chmod +x /home/user/migration/migration_script.py
+```
+
+### 8.3 Run the script manually:
+```sh
+python3 /home/user/migration/migration_script.py
+```
+
+### 8.4 To run it automatically at startup, add it to crontab
+```sh
+crontab -e
+@reboot /usr/bin/python3 /home/user/migration/migration_script.py &
+```
+
 
 ---
 
