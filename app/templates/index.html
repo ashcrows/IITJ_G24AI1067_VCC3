@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Currencies</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        table { width: 50%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid black; }
+    </style>
+    <script>
+        function updateData() {
+            fetch('/data')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('update-time').innerText = "Updated on: " + data.time;
+                let tableBody = document.getElementById('currency-table-body');
+                tableBody.innerHTML = "";
+                data.currencies.forEach(currency => {
+                    let row = `<tr><td>${currency[0]}</td><td>${currency[1]}</td></tr>`;
+                    tableBody.innerHTML += row;
+                });
+            });
+        }
+        setInterval(updateData, 30000); // Refresh data every 30 seconds
+        window.onload = updateData;
+    </script>
+</head>
+<body>
+    <h1>Top 10 Most Powerful Currencies</h1>
+    <p id="update-time">Loading...</p>
+    <table>
+        <tr>
+            <th>Currency</th>
+            <th>Value</th>
+        </tr>
+        <tbody id="currency-table-body"></tbody>
+    </table>
+</body>
+</html>
