@@ -8,8 +8,11 @@
 5. [Step 3: Install and Configure Node Exporter](#step-3-install-and-configure-node-exporter)
 6. [Step 4: Install and Configure Grafana](#step-4-install-and-configure-grafana)
 7. [Step 5: Create a Dashboard for CPU, Memory, and Disk Usage](#step-5-create-a-dashboard-for-cpu-memory-and-disk-usage)
-8. [Step 9: Demonstrating Auto-Scaling and Resource Migration](#step-9-demonstrating-auto-scaling-and-resource-migration)
-9. [Conclusion](#conclusion)
+8. [Step 6: Configure Auto-Scaling on GCP](#step-6-configure-auto-scaling-on-gcp)
+9. [Step 7: Deploy a Sample Application](#step-7-deploy-a-sample-application)
+10. [Step 8: Automate Resource Migration](#step-8-automate-resource-migration)
+11. [Step 9: Demonstrating Auto-Scaling and Resource Migration](#step-9-demonstrating-auto-scaling-and-resource-migration)
+12. [Conclusion](#conclusion)
 
 ## Introduction
 This guide provides a comprehensive step-by-step approach to setting up a local Fedora VM using VirtualBox, implementing monitoring with Grafana and Prometheus, and configuring auto-scaling with Google Cloud Platform (GCP). By following this guide, you will be able to automatically migrate resources to the cloud when the local VM exceeds a CPU usage threshold of 75%.
